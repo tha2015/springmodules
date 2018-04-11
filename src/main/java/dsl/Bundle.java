@@ -1,5 +1,7 @@
 package dsl;
 
+import java.time.Instant;
+
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -28,13 +30,17 @@ public 	class Bundle<T> implements AutoCloseable {
 
     public static <U> Bundle<U> of(Class<?> config, Class<U> api, Object... dependentApis) {
 
-        AnnotationConfigApplicationContext module = new AnnotationConfigApplicationContext();
-        module.registerBean(config, dependentApis);
-        module.refresh();
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        for (Object dependentApi : dependentApis) {
+        	context.getBeanFactory().registerSingleton(dependentApi.toString() + '/' + Instant.now(), dependentApi);
+        }
 
-        U apiObject = module.getBean(api);
+        context.registerBean(config);
+        context.refresh();
 
-        return new Bundle<U>(module, apiObject);
+        U apiObject = context.getBean(api);
+
+        return new Bundle<U>(context, apiObject);
 
     }
 
