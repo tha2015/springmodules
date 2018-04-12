@@ -28,11 +28,11 @@ public 	class Bundle<T> implements AutoCloseable {
         context.close();
     }
 
-    public static <U> Bundle<U> of(Class<?> config, Class<U> api, Object... dependentApis) {
+    public static <U> Bundle<U> of(Class<?> config, Class<U> api, Bundle<?>... dependentBundles) {
 
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-        for (Object dependentApi : dependentApis) {
-        	context.getBeanFactory().registerSingleton(dependentApi.toString() + '/' + Instant.now(), dependentApi);
+        for (Bundle<?> dependentBundle : dependentBundles) {
+        	context.getBeanFactory().registerSingleton(dependentBundle.api().getClass().getName() + '/' + Instant.now(), dependentBundle.api());
         }
 
         context.registerBean(config);

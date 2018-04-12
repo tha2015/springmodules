@@ -12,7 +12,7 @@ public class Main {
     public static void main(String[] args) {
 
         try (Bundle<BusinessApi> businessBundle = Bundle.of(BusinessApiImpl.class, BusinessApi.class);
-            Bundle<UIApi> uiBundle = Bundle.of(UIApiImpl.class, UIApi.class, businessBundle.api())) {
+            Bundle<UIApi> uiBundle = Bundle.of(UIApiImpl.class, UIApi.class, businessBundle)) {
 
             uiBundle.api().calculatorController().run();
 
