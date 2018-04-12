@@ -1,9 +1,8 @@
 package dsl;
 
-import dsl.graph.business.BusinessApi;
-import dsl.graph.business.BusinessApiImpl;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
 import dsl.graph.ui.UIApi;
-import dsl.graph.ui.UIApiImpl;
 
 public class Main {
 
@@ -11,10 +10,12 @@ public class Main {
 
     public static void main(String[] args) {
 
-        try (Bundle<BusinessApi> businessBundle = Bundle.of(BusinessApiImpl.class, BusinessApi.class);
-            Bundle<UIApi> uiBundle = Bundle.of(UIApiImpl.class, UIApi.class, businessBundle)) {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfigImpl.class)) {
 
-            uiBundle.api().calculatorController().run();
+        	Bundle<UIApi> ui = context.getBean("uiBundle", Bundle.class);
+
+            ui.api().calculatorController().run();
+
 
         }
     }
